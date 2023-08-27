@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class BookImp implements Serializable {
     static List<Book> bookList = new ArrayList<>();
+    static File file = new File("demo.txt");
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -25,13 +26,20 @@ public class BookImp implements Serializable {
                     BookImp.inputData();
                     break;
                 case 2:
-                    BookImp.saveToFile("demo.txt");
+                    BookImp.writeDataToFile("demo.txt");
                     break;
                 case 3:
                     BookImp.readFromFileAndPrintInRange("demo.txt", 10000, 20000);
                     break;
                 case 4:
-                    System.exit(0);
+                    System.out.print("Bạn có muốn xóa dữ liệu sau khi thoát (Y/N): ");
+                    String confirmDelete = scanner.nextLine();
+                    if (confirmDelete.equalsIgnoreCase("Y")) {
+                        file.delete();
+                        System.exit(0);
+                    } else {
+                        System.exit(0);
+                    }
                     break;
                 default:
                     System.err.println("Lựa chọn không đúng, vui lòng nhập lại!");
@@ -53,8 +61,8 @@ public class BookImp implements Serializable {
         System.out.println("Đã thêm sách thành công.");
     }
 
-    private static void saveToFile(String fileName) {
-        try (FileOutputStream fos = new FileOutputStream(fileName)) {
+    private static void writeDataToFile(String fileName) {
+        try (FileOutputStream fos = new FileOutputStream(fileName, true)) { // true: để ghi chèn tiếp data, false: để ghi đè
             for (Book book : bookList) {
                 String bookInfo = book.getBookId() + "," + book.getBookName() + "," + book.getPrice() + "\n";
                 fos.write(bookInfo.getBytes());
